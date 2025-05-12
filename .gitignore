@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Env files
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Build files
+dist/
+build/
+
+# VSCode settings
+.vscode/
+
+# Session files (Telegram)
+session.txt
+
+# Frontend public images (optional, if generated dynamically)
+frontend/public/images/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Cloudinary temp
+tmp/
+
+# MongoDB dump (if any)
+dump/
+
+# Ignore coverage from tests
+coverage/
