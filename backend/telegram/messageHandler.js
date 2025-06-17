@@ -42,7 +42,8 @@ export async function setupMessageHandler(client, io) {
     async (event) => {
       const msg = event.message;
       if (!msg.message) return;
-
+      console.log(msg.message);
+      
       const date = new Date(msg.date * 1000).toLocaleString();
       const title = extractTitle(msg.message);
       const url = extractUrl(msg.message);

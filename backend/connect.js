@@ -7,7 +7,7 @@ import {initializeClient} from "./telegram/client.js";
 import { setupMessageHandler } from './telegram/messageHandler.js';
 import {connectCloudinay} from "./config/cloudinary.js";
 import connectDB from './config/mongodb.js';
-import homeRouter from "./routes/homeRouter.js";
+import dealsRouter from "./routes/dealsRouter.js";
 
 
 
@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(cors());
 
 // api endpoints
-app.use("/deals" , homeRouter);
+app.use("/deals" , dealsRouter);
 
 
 
