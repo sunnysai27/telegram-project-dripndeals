@@ -3,6 +3,7 @@ import path from "path";
 import { uploadImageToCloudinary } from "../config/cloudinary.js";
 import fs from "fs";
 import dealModel from "../models/Deal.js";
+import os from 'os'
 
 
 
@@ -12,15 +13,16 @@ function extractUrl(text) {
 }
 
 function getSource(url) {
+  if(!url) return 'Unknown';
   try {
     const hostname = new URL(url).hostname;
-    if (hostname.includes("amazon") ) return "Amazon";
-    if (hostname.includes("flipkart") || hostname.includes("fkrt")) return "Flipkart";
-    if (hostname.includes("ajio") || hostname.includes("ajiio")) return "Ajio";
-    if (hostname.includes("myntra") || hostname.includes("myntr")) return "Myntra";
-    return "Other";
+    if (hostname.includes("amazon") ) return "amazon";
+    if (hostname.includes("flipkart") || hostname.includes("fkrt")) return "flipkart";
+    if (hostname.includes("ajio") || hostname.includes("ajiio")) return "ajio";
+    if (hostname.includes("myntra") || hostname.includes("myntr")) return "myntra";
+    return "other";
   } catch {
-    return "Unknown";
+    return "unknown";
   }
 }
 
@@ -29,11 +31,20 @@ function extractTitle(message) {
 
   // Split by newlines and trim each line
   const lines = message.split('\n').map(line => line.trim());
-
-  // Return the first non-empty line as the title
-  return lines.find(line => line.length > 0) || null;
+  const firstLine =  lines.find(line => line.length > 0) || null;
+  return firstLine;
 }
 
+function findIsLoot(text) {
+  const lootRegex = /loot|steal|glitch/i;
+    return lootRegex.test(text.toLowerCase());
+}
+
+function findDiscount(text) {
+  const match = text.toLowerCase().match(/\b\d+% off\b/i);
+  match ? match[0] : null;
+
+}
 
 
 export async function setupMessageHandler(client, io) {
@@ -48,55 +59,63 @@ export async function setupMessageHandler(client, io) {
       const title = extractTitle(msg.message);
       const url = extractUrl(msg.message);
       const source = getSource(url);
+      const discount = findDiscount(msg.message);
+      const isLoot = findIsLoot(msg.message);
+
+      const acceptedSources = ["amazon" , "flipkart", "ajio" , "myntra"];
+      if(!acceptedSources.includes(source)) return;
 
 
 
-      let imagePath = null;
+      let cloudinaryUrl = null;
+      let savePath = '';
       if (msg.media) {
         try {
+          const tempDir = os.tmpdir();
           const fileName = `image_${msg.id}.jpg`;
-          const saveDir = "../frontend/public/images/";
-          const savePath = path.join(saveDir, fileName);
+          savePath = path.join(tempDir, fileName);
 
           await client.downloadMedia(msg.media, { outputFile: savePath });
           
-          const cloudinaryUrl = await uploadImageToCloudinary(savePath);
+          cloudinaryUrl = await uploadImageToCloudinary(savePath);
           console.log(`☁️ Uploaded to Cloudinary: ${cloudinaryUrl}`);
 
-          imagePath = cloudinaryUrl;
-
-          // Optional: delete local file
-          fs.unlinkSync(savePath);
         } catch (err) {
           console.error("❌ Error downloading media:", err);
+          return;
+
+        } finally {
+
+          if (fs.existsSync(savePath)) {
+              fs.unlinkSync(savePath);
+          }
         }
       }
-      const acceptedSources = ["Amazon" , "Flipkart", "Ajio" , "Myntra"];
-      if(imagePath && acceptedSources.includes(source)){
+      
+      
 
         const dealData = {
           messageId : msg.id,
           title,
           url,
           source,
-          imagePath,
+          isLoot,
+          discount,
+          imagePath : cloudinaryUrl,
           date,
         }
+        
+        try {
+            const deal = new dealModel(dealData);
+            const savedDeal = await deal.save();
+            console.log(`💾 Deal saved to DB: ${savedDeal._id}`);
 
-        const deal = new dealModel(dealData);
-        await deal.save();
+            io.emit("new_deal", savedDeal);
 
-
-        io.emit("new_message", {
-            id: msg.id,
-            title,
-            date,
-            url,
-            source,
-            imagePath,
-        });
-      }
-      
+        } catch (dbError) {
+            console.error("❌ Error saving deal to DB:", dbError);
+        }
+    
     },
     new NewMessage({ chats: ["TopDealsAndOffersss"] })
   );

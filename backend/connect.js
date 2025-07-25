@@ -1,5 +1,5 @@
 import express from "express";
-import 'dotenv/config'; // ES Modules import syntax
+import 'dotenv/config'; 
 import http from "http";
 import {Server} from "socket.io";
 import cors from "cors";
@@ -17,7 +17,7 @@ const port = process.env.PORT || 4000;
 
 
 // Setup server + socket
-const server = http.createServer();
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(cors());
 
 // api endpoints
-app.use("/deals" , dealsRouter);
+app.use("/api/deals" , dealsRouter);
 
 
 
@@ -49,10 +49,6 @@ app.get("/" , (req, res) => {
     res.send("App working fine");
 })
 
-
-
-server.listen(5000, () => {
-  console.log("Socket server running on port 5000");
+server.listen(port, () => {
+  console.log(`Server (HTTP & Socket.IO) running on port ${port}`);
 });
-
-app.listen(port , () => console.log("App started on port " + port));

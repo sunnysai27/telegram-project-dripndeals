@@ -1,53 +1,36 @@
-import React, { useState , useEffect } from 'react'
-import {io} from "socket.io-client"
-import Header from './Components/Header';
-import Body from './Components/Body';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import {ToastContainer} from 'react-toastify';
+import {Routes, Route} from 'react-router-dom';
+import Navbar from './Components/Navbar';
+import Home from './pages/Home';
 import About from './pages/About';
-import ProductDetail from './Components/ProductDetail';
+import Contact from './pages/Contact';
+import Reference from './pages/Reference';
+import LiveDealTicker from './Components/LiveDealTicker';
+import Footer from './Components/Footer';
+import ProductDetailPage from './pages/ProductDetailPage';
 
-const socket = io("http://localhost:5000");
 
-function App() {
-  const [deals, setDeals] = useState([]);
-
-  useEffect(() => {
-    
-    fetchDeals();
-    // Real-time updates from socket
-    socket.on("new_message", (msg) => {
-      setDeals(prev => [msg, ...prev]); // Prepend new message
-    });
-
-    return () => socket.off("new_message");
-  }, []);
-
-  const fetchDeals = async () => {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}deals`);
-      const json =  await response.json();
-      if(json.success) {
-        setDeals(json.messages);
-      }else{
-        console.log(json.error);
-      }
-      
-  }
+const App = () => {
 
 
 
   return (
-
-    <BrowserRouter>
-      <Header />
+    // <div className="px-4 lg:mx-10 sm:px-[5vm] md:px-[7vm] lg:px-[9vm]">
+    <div className="bg-gray-100 font-sans" >
+      <ToastContainer />
+      <LiveDealTicker />
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Body deals={deals} />} />
-        <Route path='/about' element={<About />}/>
-        <Route path="/deal/:slug" element={<ProductDetail />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={ <About />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/deals/:id' element={<ProductDetailPage />} />
+        <Route path='/reference' element={<Reference />} />
       </Routes>
-    </BrowserRouter>
-      
-    
-  );
+      <Footer />
+    </div>
+  )
 }
 
-export default App;
+export default App

@@ -1,10 +1,18 @@
 import React from 'react'
+import AboutHero from '../Components/AboutHero'
+import OurMission from '../Components/OurMission'
+import Team from '../Components/Team'
+import JoinTelegram from '../Components/JoinTelegram'
 
 const About = () => {
   return (
-    <div>
-      <h1>This is about page</h1>
-    </div>
+    <>
+    <AboutHero />
+    <OurMission />
+    <Team />
+    <JoinTelegram />
+      
+    </>
   )
 }
 
