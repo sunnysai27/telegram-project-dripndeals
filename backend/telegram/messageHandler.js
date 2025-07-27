@@ -52,7 +52,8 @@ export async function setupMessageHandler(client, io) {
   client.addEventHandler(
     async (event) => {
       const msg = event.message;
-      if (!msg.message) return;
+      // if messsage doesn't have content of image return
+      if (!msg.message || !msg.media) return;
       console.log(msg.message);
       
       const date = new Date(msg.date * 1000).toLocaleString();

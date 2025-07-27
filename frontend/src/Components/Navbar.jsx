@@ -20,11 +20,13 @@ const Navbar = () => {
   return (
 
     <header className="bg-white shadow-md sticky top-[36px] z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
-
-                <div className="text-2xl font-extrabold text-gray-800">
-                    <NavLink to={'/'}>Deal<span className="text-indigo-600">Flow</span></NavLink>
+                <div className="flex-shrink-0">
+                    <NavLink className="" to={'/'}>
+                    {/* Drip<span className="text-indigo-600">Deals</span> */}
+                    <img className="h-10 w-full" src={assets.drip_brand} alt="DripnDeals" />
+                    </NavLink>
                 </div>
                 {/* NavItems  */}
                 <nav className="hidden md:flex space-x-8">

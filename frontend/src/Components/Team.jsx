@@ -15,7 +15,7 @@ const Team = () => {
                         <TeamMemberCard
                             name="Sunny"
                             role="Founder & Developer"
-                            bio="The architect of DealFlow. Sunny built the system that powers our real-time deal aggregation."
+                            bio="The architect of DealnDeals. Sunny built the system that powers our real-time deal aggregation."
                         />
                         
                     </div>

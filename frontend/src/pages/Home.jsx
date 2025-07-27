@@ -23,7 +23,7 @@ const Home = () => {
     setLoading(true);
       try {
           const response = await axios.get( `${backendUrl}/api/deals/list?page=${page}`);
-          console.log(response.data);
+          // console.log(response.data);
           if(response.data.success) {
               setDeals(response.data.deals);
               setFilteredDeals(response.data.deals);

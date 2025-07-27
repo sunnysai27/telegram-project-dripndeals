@@ -5,7 +5,6 @@ import Navbar from './Components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import Reference from './pages/Reference';
 import LiveDealTicker from './Components/LiveDealTicker';
 import Footer from './Components/Footer';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -26,7 +25,6 @@ const App = () => {
         <Route path='/about' element={ <About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/deals/:id' element={<ProductDetailPage />} />
-        <Route path='/reference' element={<Reference />} />
       </Routes>
       <Footer />
     </div>

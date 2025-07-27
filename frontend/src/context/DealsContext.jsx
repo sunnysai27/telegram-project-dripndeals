@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { createContext, useState } from "react";
+import { toast } from "react-toastify";
 
 
 
@@ -17,20 +19,48 @@ export function DealsContextProvider(props){
     
     const filterOptions = ['all', 'amazon', 'flipkart', 'myntra', 'ajio'];
 
+    const getFilteredDeals = async (source) => {
+        try {
+            const response = await axios.get(`${backendUrl}/api/deals/${source}`);
+            console.log(response.data);
+            if(response.data.success) {
+                setFilteredDeals(response.data.deals);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+        
+
+
+    }
+
     const handleFilter = (store) => {
         setActiveFilter(store);
         if (store === 'all') {
             setFilteredDeals(deals);
         } else {
-            setFilteredDeals(deals.filter(deal => deal.source === store));
+            getFilteredDeals(store);
         }
     };
+
+    const getDuration = (date) => {
+        const timestamp = new Date(date).getTime();
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+
+        if (seconds < 60) return `${seconds} sec ago`;
+        if (seconds < 3600) return `${Math.floor(seconds / 60)} min ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)} hrs ago`;
+        return `${Math.floor(seconds / 86400)} days ago`;
+    };
+
 
 
     const value = {
         deals, setDeals,
         filterOptions, handleFilter , activeFilter, setActiveFilter, filteredDeals, setFilteredDeals,
-        activePage, setActivePage, backendUrl, telegramChannelUrl
+        activePage, setActivePage, backendUrl, telegramChannelUrl, getDuration,
 
     };
 

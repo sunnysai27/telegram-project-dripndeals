@@ -19,6 +19,8 @@ import amazon_icon from './images/amazon_icon.png'
 import flipkart_icon from './images/flipkart_icon.png'
 import myntra_icon from './images/myntra_icon.png'
 import ajio_icon from './images/ajio_icon.png'
+import drip_brand from './images/drip_brand.png'
+import drip_white from './images/drip_white.png'
 
 
 export const assets = {
@@ -40,5 +42,7 @@ export const assets = {
     flipkart_icon,
     myntra_icon,
     ajio_icon,
+    drip_brand,
+    drip_white
 }
 
