@@ -1,0 +1,20 @@
+  {
+    "version": 2,
+    "builds": [
+        {
+            "src": "connect.js",
+            "use": "@vercel/node",
+            "config": {
+                "includeFiles": [
+                    "dist/**"
+                ]
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "connect.js"
+        }
+    ]
+}
