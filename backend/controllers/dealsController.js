@@ -8,17 +8,19 @@ export const getProductsList = async (req, res) => {
         const limit = parseInt(req.query.limit) || 100; // Get limit, default to 20
         const skip = (page - 1) * limit;
 
-        const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
-        const query = {
-            createdAt: { $gt: fortyEightHoursAgo }
-        };
+        const query = {};
+
+        // const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+        // const query = {
+        //     createdAt: { $gt: fortyEightHoursAgo }
+        // };
 
         const deals = await dealModel.find(query)
             .sort({ createdAt: -1 })
             .skip(skip) 
             .limit(limit);
 
-        const totalDeals = await dealModel.countDocuments();
+        const totalDeals = await dealModel.countDocuments(query);
 
         res.json({
             success: true,

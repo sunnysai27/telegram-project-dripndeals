@@ -41,7 +41,7 @@ export async function initializeClient() {
     }
 }
 
-// --- GRACEFUL SHUTDOWN LOGIC (IMPROVED) ---
+
 // This function ensures we disconnect cleanly before the process exits.
 const cleanup = async () => {
     console.log('Attempting graceful shutdown...');
